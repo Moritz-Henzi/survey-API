@@ -62,7 +62,7 @@ Decisions that are fixed before the project starts. Everything else is decided w
  
 ## ADR-007: Survey lifecycle
 
-**Decision:** A survey goes `draft` → `published` → `closed`. Transitions are one-way and irreversible. A published survey can only change its `end_at`. The rule is enforced in the service layer.
+**Decision:** A survey goes `draft` → `published` → `closed`. `draft` to `published` Transitions are one-way and irreversible while a `closed` survey can get reopened again. A published and closed survey can only change its `end_at` (other than the status). The rule is enforced in the service layer.
  
 **Why:** Responses always match the questions they were given for. Mistakes in a published survey could mean creating a new one.
  
@@ -90,13 +90,24 @@ Decisions that are fixed before the project starts. Everything else is decided w
 - Pest with model factories. Tests run against MySQL
 - Feature (HTTP) tests are the main layer: per endpoint happy path, 401/403, 422 and the domain rule. Unit tests for services, policy tests per permission.
 - Tests are written before each feature implementation and run in CI on every push.
+
+## ADR-011: Effect on survey status when reaching `end_at` 
+
+**Decision** 
+- A survey gets automatically closed when it reaches the `end_at` date
+
+**Why:** A survey can get extended while it's published and also reopened with a different `end_at` date so manually closing a survey when its `end_at` is exeeded brings unwanted complexity for the end user 
+
+## ADR-012: Rules for 'end_at'
+
+**Decision:**
+- If set... `end_at` has to be in the future and after the `start_at` date
+
+**Why** setting `end_at` at a past date would automatically lead to the survey beeing closed as of ADR-011.
  
 ## Decided / documented later
 
 - response submission, whether checks are needed if every answer belongs to a question of the survey
-- Rules for `end_at` (in the future, not before `start_at`)
 - Whether published or closed surveys can be deleted, and what happens to their responses
-- Whether `closed` is reached automatically at `end_at` or manually
 - Aggregated results as a separate endpoint
 - Pagination, error format, rate limiting on submission
-- Testing strategy
