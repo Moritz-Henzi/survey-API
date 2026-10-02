@@ -1,58 +1,61 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Survey API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API for creating surveys, collecting responses and evaluating results. Three roles **respondent**, **author** and **admin** all share the ability to respond to surveys. **author** and **admin** can create surveys and the coresponding questions. **author** can only execute actions and view results of their own surveys while **admin** can execute actions and view results of every survey.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tech stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP 8.3+ (Sail and CI run 8.5), Laravel 13
+- MySQL 8.4 (local tests run on in-memory SQLite)
+- [Laravel Sail](https://laravel.com/docs/sail) — Docker dev environment with MySQL and Mailpit
+- [Laravel Sanctum](https://laravel.com/docs/sanctum) `^4.0` — bearer-token API auth
+- [spatie/laravel-permission](https://spatie.be/docs/laravel-permission) `^8.3` — roles & permissions
+- [spatie/laravel-query-builder](https://spatie.be/docs/laravel-query-builder) `^7.3` — filtering, sorting, includes
+- [Pest](https://pestphp.com/) `^5.0` — testing; [Pint](https://laravel.com/docs/pint) — formatting; [Larastan](https://github.com/larastan/larastan)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Getting started
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+The project runs on Laravel Sail. Every PHP/Artisan/Composer command goes through `./vendor/bin/sail`.
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+cp .env.example .env
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+In `.env`, point the app at the Sail services:
 
-## Contributing
+```dotenv
+APP_URL=http://localhost
+DB_HOST=mysql
+DB_USERNAME=sail
+DB_PASSWORD=password
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Deliver mail to Mailpit instead of the log
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+```
 
-## Code of Conduct
+Install dependencies then start the containers:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+composer install
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate --seed
+```
 
-## Security Vulnerabilities
+| Service | URL |
+|---|---|
+| API | `http://localhost/api/v1` (`APP_PORT`, default 80) |
+| Mailpit | `http://localhost:8025` |
+| MySQL | `localhost:3306` (`FORWARD_DB_PORT`) |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Authentification
 
-## License
+## Endpoints 
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Testing
+
+## Project structure / architecture
+
